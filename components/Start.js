@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
+import { ImageBackground, StyleSheet, Text, KeyboardAvoidingView, View, TextInput, TouchableOpacity } from "react-native";
 
 const image = require('../media/images/background-image.png');
 
@@ -26,25 +26,41 @@ const Start = ({navigation}) => {
                         placeholder='Type your username here'
                         placeholderTextColor='#757083'
                     />
-                    <Text style={styles.colorSelector}>Choose background color:</Text>
-                    <View style={styles.selectColorElement}>
+                    <Text style={styles.textColorSelector}>Choose background color:</Text>
+                    <View style={styles.colorSelector}>
                         <TouchableOpacity 
-                            style={[styles.circle, {backgroundColor: backgroundColors.a}]}
+                            style={[
+                                styles.circle, 
+                                color === backgroundColors.a && styles.selectedCircle, 
+                                {backgroundColor: backgroundColors.a}
+                            ]}
                             onPress={() => setColor(backgroundColors.a)}
                         >
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={[styles.circle, {backgroundColor: backgroundColors.b}]}
+                            style={[
+                                styles.circle, 
+                                color === backgroundColors.b && styles.selectedCircle, 
+                                {backgroundColor: backgroundColors.b}
+                            ]}
                             onPress={() => setColor(backgroundColors.b)}
                         >
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={[styles.circle, {backgroundColor: backgroundColors.c}]}
+                            style={[
+                                styles.circle, 
+                                color === backgroundColors.c && styles.selectedCircle,
+                                {backgroundColor: backgroundColors.c}
+                            ]}
                             onPress={() => setColor(backgroundColors.c)}
                         >
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={[styles.circle, {backgroundColor: backgroundColors.d}]}
+                            style={[
+                                styles.circle, 
+                                color === backgroundColors.d && styles.selectedCircle,
+                                {backgroundColor: backgroundColors.d}
+                            ]}
                             onPress={() => setColor(backgroundColors.d)}
                         >
                         </TouchableOpacity>
@@ -56,6 +72,9 @@ const Start = ({navigation}) => {
                         <Text>Start chatting</Text>
                     </TouchableOpacity>
                 </View>
+                {Platform.OS === "ios" ? (
+                    <KeyboardAvoidingView behavior='padding' />
+                ) : null}
             </ImageBackground>
         </View>
     )
@@ -80,7 +99,8 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
         backgroundColor: '#000000',
-        padding: '6%'
+        padding: '6%',
+        flexBasis: 160
     },
     textInput: {
         fontSize: 16,
@@ -92,15 +112,15 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15
     },
-    selectColorElement: {
-        flex: 1,
-        justifyContent: 'space-around',
-        flexDirection: 'row'
-    },
-    colorSelector: {
+    textColorSelector: {
         fontSize: 16,
         fontWeight: '300',
         color: '#8A95A5'
+    },
+    colorSelector: {
+        flex: 1,
+        justifyContent: 'space-around',
+        flexDirection: 'row'
     },
     circle: {
         height: 50,
@@ -108,6 +128,10 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginTop: 10,
         marginBottom: 10,
+    },
+    selectedCircle: {
+        borderWidth: 2,
+        borderColor: '#FFFFFF'
     },
     button: {
         alignContent: 'center',
