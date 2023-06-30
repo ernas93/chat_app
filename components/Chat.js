@@ -12,7 +12,7 @@ const Chat = ({ route, navigation }) => {
         setMessages(previousMessages => 
             GiftedChat.append(previousMessages, newMessages))
         };
-        
+
     useEffect(() => {
         setMessages([
             {
@@ -27,7 +27,7 @@ const Chat = ({ route, navigation }) => {
             },
             {
                 _id: 2,
-                text: "This is a sisytem message",
+                text: "This is a system message",
                 createAt: new Date(),
                 system: true,
             },
