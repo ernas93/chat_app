@@ -13,10 +13,8 @@ const Stack = createNativeStackNavigator();
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-
-
 const App = () => {
-  // Your web app's Firebase configuration
+  // The web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyC4HuOfha7pqdvoRohfOikwvYbY8fqO59g",
     authDomain: "chat-app-69a66.firebaseapp.com",
@@ -27,7 +25,7 @@ const App = () => {
   };
   // initialize Firebase
   const app = initializeApp(firebaseConfig);
-  // initialize Clou Firestore and get a reference to the service
+  // initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
   return (
     <NavigationContainer>
@@ -40,7 +38,6 @@ const App = () => {
         />
         <Stack.Screen
           name="Chat"
-          component={Chat}
         >
           {props => <Chat db={db} {...props} />}
         </Stack.Screen>
