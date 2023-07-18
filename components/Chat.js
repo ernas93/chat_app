@@ -16,6 +16,8 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { async } from "@firebase/util";
 
 const Chat = ({ route, navigation, db }) => {
   const { name, color, userID } = route.params;
@@ -47,14 +49,23 @@ const Chat = ({ route, navigation, db }) => {
             createdAt: new Date(doc.data().createdAt.toMillis()),
           });
         });
+        cacheMessages(newMessages);
         setMessages(newMessages);
-      }
+    }
     );
-
+    
     return () => {
-      if (unsubMessages) unsubMessages();
+        if (unsubMessages) unsubMessages();
     };
-  }, []);
+}, []);
+
+const cacheMessages = async (messagesToCache) => {
+      try {
+          await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
+      }   catch (error) { 
+          console.log(error.message);
+      }
+  };
 
   useEffect(() => {
     navigation.setOptions({ title: name });
