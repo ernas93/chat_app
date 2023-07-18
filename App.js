@@ -2,6 +2,9 @@
 import Start from "./components/Start";
 import Chat from "./components/Chat";
 
+import { useEffect } from "react";
+import { Alert } from "react-native";
+
 //importing react navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,9 +14,14 @@ const Stack = createNativeStackNavigator();
 
 //importing firestore databe
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
+
+//importing useNetInfo for keeping track of the network's connectivity and updating in real time
+import { useNetInfo } from "@react-native-community/netinfo";
 
 const App = () => {
+  const connectionStatus = useNetInfo();
+
   // The web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyC4HuOfha7pqdvoRohfOikwvYbY8fqO59g",
@@ -25,6 +33,17 @@ const App = () => {
   };
   // initialize Firebase
   const app = initializeApp(firebaseConfig);
+
+  // throwing an error if no internet
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("No internet connection")
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
+
   // initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
   return (
@@ -39,7 +58,7 @@ const App = () => {
         <Stack.Screen
           name="Chat"
         >
-          {props => <Chat db={db} {...props} />}
+          {props => <Chat isConnected={connectionStatus.isConnected} db={db} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
