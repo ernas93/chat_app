@@ -1,3 +1,4 @@
+import CustomActions from './CustomActions';
 import { useEffect, useState } from 'react';
 import {
   collection,
@@ -8,6 +9,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+import { MapView } from 'react-native-maps';
 import {
   StyleSheet,
   Text,
@@ -107,11 +109,40 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     }
   };
 
+  const renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3,
+          }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0933,
+            longitudeDelta: 0.0431,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <GiftedChat
         messages={messages}
         onSend={(message) => addMessage(message)}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         user={{
           _id: userID,
           name: name,
