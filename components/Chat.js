@@ -1,16 +1,16 @@
+import CustomActions from './CustomActions';
 import { useEffect, useState } from 'react';
 import {
   collection,
   addDoc,
   onSnapshot,
-  getDocs,
   query,
   orderBy,
 } from 'firebase/firestore';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+import MapView from 'react-native-maps';
 import {
   StyleSheet,
-  Text,
   View,
   KeyboardAvoidingView,
   Platform,
@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, color, userID } = route.params;
 
   //created messages state
@@ -31,6 +31,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
       newMessages[0]
     );
 
+    //if failed to add a new message
     if (!newMessageRef.id) {
       Alert.alert('Unable to add. Please try later');
     }
@@ -49,6 +50,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         (documentsSnapshot) => {
           let newMessages = [];
           documentsSnapshot.forEach((doc) => {
+            // shape the messages to match what gifted chat expects
             newMessages.push({
               id: doc.id,
               ...doc.data(),
@@ -92,7 +94,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
             backgroundColor: '#797EF6',
           },
           left: {
-            backgroundColor: '#4ADEDE',
+            backgroundColor: '#FFFFFF',
           },
         }}
       />
@@ -107,11 +109,41 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     }
   };
 
+  const renderCustomActions = (props) => {
+    return <CustomActions storage={storage} userID={userID} {...props} />;
+  };
+
+  // if the message includes a location, then render a MapView
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3,
+          }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0933,
+            longitudeDelta: 0.0431,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <GiftedChat
         messages={messages}
         onSend={(message) => addMessage(message)}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         user={{
           _id: userID,
           name: name,

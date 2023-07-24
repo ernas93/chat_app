@@ -11,7 +11,6 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const image = require('../media/images/background-image.png');
 
@@ -35,7 +34,6 @@ const Start = ({ navigation }) => {
           name: name,
           color: color,
         });
-        Alert.alert('Signed in successfully.');
       })
       .catch((error) => {
         Alert.alert('Something went wrong, try again later.');
@@ -45,7 +43,7 @@ const Start = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <Text style={styles.appTitle}>App title</Text>
+        <Text style={styles.appTitle}>ChitChat</Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -107,7 +105,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: 'space-between',
-    //alignItems: 'center',
     padding: '6%',
   },
   appTitle: {
