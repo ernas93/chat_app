@@ -4,15 +4,13 @@ import {
   collection,
   addDoc,
   onSnapshot,
-  getDocs,
   query,
   orderBy,
 } from 'firebase/firestore';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
-import { MapView } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import {
   StyleSheet,
-  Text,
   View,
   KeyboardAvoidingView,
   Platform,
@@ -20,7 +18,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, color, userID } = route.params;
 
   //created messages state
@@ -94,7 +92,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
             backgroundColor: '#797EF6',
           },
           left: {
-            backgroundColor: '#4ADEDE',
+            backgroundColor: '#FFFFFF',
           },
         }}
       />
@@ -110,11 +108,12 @@ const Chat = ({ route, navigation, db, isConnected }) => {
   };
 
   const renderCustomActions = (props) => {
-    return <CustomActions {...props} />;
+    return <CustomActions storage={storage} {...props} />;
   };
 
   const renderCustomView = (props) => {
     const { currentMessage } = props;
+    console.log('jjgjjtzthgfhf', props.currentMessage);
     if (currentMessage.location) {
       return (
         <MapView
