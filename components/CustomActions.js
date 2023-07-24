@@ -26,6 +26,8 @@ const CustomActions = ({
         options,
         cancelButtonIndex,
       },
+
+      // selects the action function based on the index selected from the `options`
       async (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
@@ -42,6 +44,7 @@ const CustomActions = ({
     );
   };
 
+  // uploads the image to firebase storage, then uses the img URL and adds to messages
   const sendAndUploadImage = async (imageURI) => {
     const uniqueRefString = generateReference(imageURI);
     const response = await fetch(imageURI);
@@ -54,6 +57,8 @@ const CustomActions = ({
     });
   };
 
+  // gets the users media permissions and if granted, opens the library and passes the
+  // img URI to `sendAndUploadImage`
   const pickImage = async () => {
     let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -64,6 +69,8 @@ const CustomActions = ({
     } else Alert.alert("Permissions haven't been granted.");
   };
 
+  // gets the users camera permissions and if granted, opens the camera and passes the
+  // img URI to `sendAndUploadImage`
   const takePicture = async () => {
     let permission = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -74,6 +81,7 @@ const CustomActions = ({
     } else Alert.alert("Permissions haven't been granted.");
   };
 
+  // gets the users location permissions and if granted, gets the users current location and sends it
   const getLocation = async () => {
     let permission = await Location.requestForegroundPermissionsAsync();
 
@@ -90,6 +98,7 @@ const CustomActions = ({
     } else Alert.alert("Permissions haven't been granted.");
   };
 
+  // generates a unique string based on the time, img name and userID
   const generateReference = (uri) => {
     const timeStamp = new Date().getTime();
     const imageName = uri.split('/')[uri.split('/').length - 1];

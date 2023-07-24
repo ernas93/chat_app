@@ -31,6 +31,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
       newMessages[0]
     );
 
+    //if failed to add a new message
     if (!newMessageRef.id) {
       Alert.alert('Unable to add. Please try later');
     }
@@ -49,6 +50,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
         (documentsSnapshot) => {
           let newMessages = [];
           documentsSnapshot.forEach((doc) => {
+            // shape the messages to match what gifted chat expects
             newMessages.push({
               id: doc.id,
               ...doc.data(),
@@ -111,9 +113,9 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     return <CustomActions storage={storage} userID={userID} {...props} />;
   };
 
+  // if the message includes a location, then render a MapView
   const renderCustomView = (props) => {
     const { currentMessage } = props;
-    console.log('jjgjjtzthgfhf', props.currentMessage);
     if (currentMessage.location) {
       return (
         <MapView
